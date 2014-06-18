@@ -177,9 +177,9 @@ function WebTile(container, map, sprites, loadCallback) {
 	this.init()
 }
 
-WebTile.LOAD_COMPLETE = "loadComplete"
 WebTile.TILE_SIZE = 16
 WebTile.MASK_FLOOR = 0xffffff ^ WebTile.TILE_SIZE - 1
+WebTile.BITS_DIV = Math.log(WebTile.TILE_SIZE)/Math.log(2)
 
 WebTile.prototype.container = null
 WebTile.prototype.map = null
@@ -224,8 +224,8 @@ WebTile.prototype.init = function() {
 }
 
 WebTile.prototype.onResize = function() {
-	this.ct = (this.container.offsetWidth & WebTile.MASK_FLOOR)/WebTile.TILE_SIZE + 1
-	this.rt = (this.container.offsetHeight & WebTile.MASK_FLOOR)/WebTile.TILE_SIZE + 1
+	this.ct = ((this.container.offsetWidth & WebTile.MASK_FLOOR) >> WebTile.BITS_DIV) + 1
+	this.rt = ((this.container.offsetHeight & WebTile.MASK_FLOOR) >> WebTile.BITS_DIV) + 1
 }
 
 WebTile.prototype.update = function() {
