@@ -87,7 +87,7 @@ function WebTile(container, map, sprites, loadCallback) {
 WebTile.TILE_SIZE = 16
 WebTile.MASK_FLOOR = 0xffffff ^ WebTile.TILE_SIZE - 1
 WebTile.MASK_CROP = (WebTile.TILE_SIZE << 1) - 1
-WebTile.BIT_EXP = Math.log(WebTile.TILE_SIZE)/Math.log(2)
+WebTile.BITS_EXP = Math.log(WebTile.TILE_SIZE)/Math.log(2)
 
 WebTile.prototype.container = null
 WebTile.prototype.map = null
@@ -115,8 +115,8 @@ WebTile.prototype.init = function() {
 			s.position = "absolute"
 			s.width = s.height = WebTile.TILE_SIZE + "px"
 			s.backgroundRepeat = "no-repeat"
-			s.left = (c << WebTile.BIT_EXP) + "px"
-			s.top = (r << WebTile.BIT_EXP) + "px"
+			s.left = (c << WebTile.BITS_EXP) + "px"
+			s.top = (r << WebTile.BITS_EXP) + "px"
 
 			this.tiles[r].push(t)
 			this.grid.appendChild(t)
@@ -132,8 +132,8 @@ WebTile.prototype.init = function() {
 }
 
 WebTile.prototype.onResize = function() {
-	this.ct = (this.bwCeil(this.container.offsetWidth) >> WebTile.BIT_EXP) + 1
-	this.rt = (this.bwCeil(this.container.offsetHeight) >> WebTile.BIT_EXP) + 1
+	this.ct = (this.bwCeil(this.container.offsetWidth) >> WebTile.BITS_EXP) + 1
+	this.rt = (this.bwCeil(this.container.offsetHeight) >> WebTile.BITS_EXP) + 1
 }
 
 WebTile.prototype.update = function() {
