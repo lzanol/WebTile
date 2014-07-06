@@ -11,17 +11,18 @@
 		<script type="text/javascript" src="js/webtile.js"></script>
 		<script type="text/javascript">
 		function init() {
-			var config = WebTile.Config()
 			var app = new WebTile()
+			var level1 = new WebTile.Config()
 
-			config.container = document.getElementById("ph")
-			config.path = "img/sprites0.png"
-			config.sprites = [
+			level1.container = document.getElementById("ph")
+			level1.spriteSet = "img/sprites0.png"
+			level1.spriteMap = [
 				new WebTile.Sprite(0 << WebTile.BITS_EXP, 0 << WebTile.BITS_EXP),
-				new WebTile.Sprite(1 << WebTile.BITS_EXP, 0 << WebTile.BITS_EXP, WebTile.TileType.LOCKED),
-				new WebTile.Sprite(2 << WebTile.BITS_EXP, 0 << WebTile.BITS_EXP, WebTile.TileType.LOCKED)
+				new WebTile.Sprite(1 << WebTile.BITS_EXP, 0 << WebTile.BITS_EXP, WebTile.TILE_LOCKED),
+				new WebTile.Sprite(2 << WebTile.BITS_EXP, 0 << WebTile.BITS_EXP, WebTile.TILE_LOCKED)
 			]
-			config.map = [
+			//level1.tileSet = "level1.map"
+			level1.tileSet = [
 				[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
 				[0,0,2,2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
 				[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
@@ -39,11 +40,10 @@
 				[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
 				[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
 			]
-			config.onLoad = function() {
-				console.log("loaded!")
-			}
 
-			app.load(config)
+			app.load(level1, function() {
+				console.log("loaded!")
+			})
 		}
 		</script>
 	</head>

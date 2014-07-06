@@ -75,31 +75,34 @@ Time.prototype.getCurrent = function() {
 	return this.getCurrentMs()*.001
 }
 
-function WebTile(container, map, sprites, loadCallback) {
-	this.container = container
-	this.map = map
-	this.sprites = sprites
-	this.loadCallback = loadCallback || function(){}
-
-	this.init()
-}
-
+function WebTile() {}
 WebTile.TILE_SIZE = 16
 WebTile.MASK_FLOOR = 0xffffff ^ WebTile.TILE_SIZE - 1
 WebTile.MASK_CROP = (WebTile.TILE_SIZE << 1) - 1
 WebTile.BITS_EXP = Math.log(WebTile.TILE_SIZE)/Math.log(2)
 
+WebTile.Config = function() {}
+WebTile.Config.prototype.container = null
+WebTile.Config.prototype.spriteSet = null
+WebTile.Config.prototype.spriteMap = null
+WebTile.Config.prototype.tileSet = null
+
 WebTile.prototype.container = null
-WebTile.prototype.map = null
-WebTile.prototype.sprites = null
 WebTile.prototype.grid = null
 WebTile.prototype.tiles = null
-WebTile.prototype.loadCallback = null
+WebTile.prototype.onLoad = null
+
+WebTile.prototype.load = function(config, onLoad) {
+	this.container = config.container
+	this.onLoad = onLoad || function(){}
+
+	this.init()
+}
 
 WebTile.prototype.init = function() {
 	var r,c,t,s
 
-	this.onResize()
+	this.updateSize()
 
 	this.container.style.overflow = "hidden"
 	this.grid = document.createElement("div")
@@ -126,23 +129,28 @@ WebTile.prototype.init = function() {
 	this.container.appendChild(this.grid)
 
 	Utils.preloadImages(this.sprites, Utils.createDelegate(this, function() {
-		this.update()
+		this.updateTiles()
 		this.loadCallback()
 	}))
 }
 
-WebTile.prototype.onResize = function() {
+WebTile.prototype.updateSize = function() {
 	this.ct = (this.bwCeil(this.container.offsetWidth) >> WebTile.BITS_EXP) + 1
 	this.rt = (this.bwCeil(this.container.offsetHeight) >> WebTile.BITS_EXP) + 1
 }
 
-WebTile.prototype.update = function() {
+WebTile.prototype.updateTiles = function() {
 	var r,c
 
 	for (r = 0; r < this.rt; ++r)
 		for (c = 0; c < this.ct; ++c)
 			if (r < this.map.length && c < this.map[r].length && this.map[r][c] < this.sprites.length)
 				this.tiles[r][c].style.backgroundImage = "url(" + this.sprites[this.map[r][c]] + ")"
+}
+
+WebTile.prototype.scroll = function(x, y) {
+	this.grid.style.left = x + "px"
+	this.grid.style.top = y + "px"
 }
 
 WebTile.prototype.bwCeil = function(n) {
